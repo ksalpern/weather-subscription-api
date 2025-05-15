@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install -g pnpm@9
+RUN npm install -g pnpm@10
 RUN pnpm install
 
 COPY . .
