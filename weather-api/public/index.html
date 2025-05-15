@@ -1,79 +1,117 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weather Updates Subscription</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="cloud-container">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="cloud cloud-4"></div>
+    <div class="cloud cloud-5"></div>
+    <div class="cloud cloud-6"></div>
+  </div>
+  
   <div class="container">
-    <h1>Subscribe to Weather Updates</h1>
-    <form id="subscriptionForm">
-      <div class="form-group">
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" name="email" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="city">City:</label>
-        <input type="text" id="city" name="city" required>
-      </div>
-      
-      <div class="form-group">
-        <label>Update Frequency:</label>
-        <div class="radio-group">
-          <label>
-            <input type="radio" name="frequency" value="daily" checked> Daily
-          </label>
-          <label>
-            <input type="radio" name="frequency" value="hourly"> Hourly
-          </label>
+    <div class="form-card">
+      <h1>Weather Updates</h1>
+      <form id="subscriptionForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="your@email.com">
         </div>
-      </div>
+        
+        <div class="form-group">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" required placeholder="e.g., London, New York, Tokyo">
+        </div>
+        
+        <div class="form-group">
+          <label>Update Frequency</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="frequency" value="daily" checked>
+              <span></span>
+              Daily
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="frequency" value="hourly">
+              <span></span>
+              Hourly
+            </label>
+          </div>
+        </div>
+        
+        <button type="submit">Subscribe</button>
+      </form>
       
-      <button type="submit">Subscribe</button>
-    </form>
-    
-    <div id="message" class="hidden"></div>
+      <div id="message" class="hidden"></div>
+    </div>
   </div>
   
   <script>
-    document.getElementById('subscriptionForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const email = document.getElementById('email').value;
-      const city = document.getElementById('city').value;
-      const frequency = document.querySelector('input[name="frequency"]:checked').value;
-      
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('subscriptionForm');
       const messageEl = document.getElementById('message');
-      messageEl.classList.remove('success', 'error');
-      messageEl.classList.add('hidden');
-      
-      try {
-        const response = await fetch('/api/subscribe', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, city, frequency }),
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-          messageEl.textContent = data.message;
-          messageEl.classList.add('success');
-        } else {
-          messageEl.textContent = data.message || 'An error occurred. Please try again.';
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        // Form values
+        const email = document.getElementById('email').value;
+        const city = document.getElementById('city').value;
+        const frequency = document.querySelector(
+          'input[name="frequency"]:checked',
+        ).value;
+
+        // Reset message state
+        messageEl.classList.remove('success', 'error');
+        messageEl.classList.add('hidden');
+
+        // Show loading state on button
+        const button = this.querySelector('button');
+        const originalText = button.textContent;
+        button.textContent = 'Subscribing...';
+        button.disabled = true;
+
+        try {
+          const response = await fetch('/api/subscribe', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, city, frequency }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            messageEl.textContent =
+              data.message ||
+              'Subscription successful! Please check your email to confirm.';
+            messageEl.classList.add('success');
+
+            form.reset();
+          } else {
+            messageEl.textContent =
+              data.message || 'An error occurred. Please try again.';
+            messageEl.classList.add('error');
+          }
+        } catch (error) {
+          console.error('Subscription error:', error);
+          messageEl.textContent = 'An error occurred. Please try again.';
           messageEl.classList.add('error');
+        } finally {
+          button.textContent = originalText;
+          button.disabled = false;
+
+          messageEl.classList.remove('hidden');
         }
-      } catch (error) {
-        messageEl.textContent = 'An error occurred. Please try again.';
-        messageEl.classList.add('error');
-      }
-      
-      messageEl.classList.remove('hidden');
+      });
     });
   </script>
 </body>
