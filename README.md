@@ -14,7 +14,7 @@ A NestJS application that allows users to subscribe to regular weather updates f
 
 - **Database:** PostgreSQL, TypeORM
 
-- **Email:** Nodemailer
+- **Email:** Nodemailer, [mailtrap](https://mailtrap.io/)
 
 - **Scheduling:** @nestjs/schedule
 
