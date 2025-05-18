@@ -10,29 +10,29 @@ services:
     depends_on:
       - postgres
     environment:
-      - PORT=${PORT:-3000}
-      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${PORT}
+      - NODE_ENV=${NODE_ENV}
       - DB_HOST=postgres
       - DB_PORT=5432
-      - DB_USERNAME=${DB_USERNAME:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-postgres}
-      - DB_DATABASE=${DB_DATABASE:-weather_api}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
       - WEATHER_API_KEY=${WEATHER_API_KEY}
       - EMAIL_HOST=${EMAIL_HOST}
       - EMAIL_PORT=${EMAIL_PORT}
       - EMAIL_USER=${EMAIL_USER}
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
       - EMAIL_FROM=${EMAIL_FROM}
-      - APP_URL=${APP_URL:-http://localhost:3000}
-      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - APP_URL=${APP_URL}
+      - FRONTEND_URL=${FRONTEND_URL}
     restart: always
 
   postgres:
     image: postgres:15-alpine
     environment:
-      - POSTGRES_USER=${DB_USERNAME:-postgres}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
-      - POSTGRES_DB=${DB_DATABASE:-weather_api}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
     ports:
       - "5433:5432"
     volumes:
